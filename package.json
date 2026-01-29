@@ -12,14 +12,20 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "playground": "ts-node ./playground/index.ts"
   },
   "keywords": [
-    "marcuth"
+    "instagram",
+    "puppeteer",
+    "pupgram",
+    "instagram-bot",
+    "instagram-automation"
   ],
   "author": "Marcuth",
   "license": "MIT",
   "devDependencies": {
+    "@marcuth/env": "^0.0.1",
     "@types/node": "^25.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -28,5 +34,12 @@
     "prettier-plugin-sort-imports": "^1.8.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "clipboardy": "^5.1.0",
+    "puppeteer": "^24.36.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "winston": "^3.19.0"
   }
 }
