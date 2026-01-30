@@ -6,14 +6,25 @@ import { Logger } from "winston"
 import fs from "node:fs"
 
 import {
+    clickOnCreateButtonAction,
+    clickOnNextButtonAction,
+    clickOnPostButtonAction,
+    clickOnShareButtonAction,
+    putPostCaptionAction,
+    selectFilesAction,
+    waitForConfirmationAction,
+} from "./actions/create-post"
+import {
     typeUsernameAction,
     typePasswordAction,
     clickOnLoginButtonAction,
     tryCloseNotificationsDialogAction,
 } from "./actions/login"
+import { needsLoginAction } from "./actions/needs-login.action"
+import { PostData } from "./interfaces/post-data.interface"
 import { createLogger } from "./helpers/logger.helper"
+import { delayAction } from "./actions/delay.action"
 import { Action, Config } from "./interfaces"
-import { needsLoginAction } from "./actions"
 
 puppeteer.use(StealthPlugin())
 
@@ -40,6 +51,16 @@ export type InstagramOptions = {
     htmlContentOnError: boolean
     config: Config
     defaultTimeout?: number
+}
+
+export type LogInOptions = {
+    username: string
+    password: string
+}
+
+export type CreatePostOptions = {
+    filePaths: string[]
+    caption: string
 }
 
 export class Instagram {
@@ -115,28 +136,43 @@ export class Instagram {
         return page
     }
 
-    private async executeWithDiagnostics(actions: Action[]) {
+    private async executeWithDiagnostics(actions: Action<any>[]) {
         const page = await this.initalizePage()
 
         try {
+            let result: any
+
             for (const action of actions) {
-                await action({
+                result = await action({
                     config: this.config,
                     logger: this.logger,
                     page: page,
                     defaultTimeout: this.defaultTimeout,
                 })
             }
+
+            return result
         } catch (error) {
             this.logger.error(error)
 
+            const errorsDir = "errors"
+            const currentErrorDir = `${errorsDir}/error-${Date.now()}`
+
+            if (this.screenshotOnError || this.htmlContentOnError) {
+                this.logger.info("Creating error directory")
+                await fs.promises.mkdir(currentErrorDir, { recursive: true })
+                this.logger.debug("Error directory created")
+            }
+
             if (this.screenshotOnError) {
-                await page.screenshot({ path: `error-${Date.now()}.png` })
+                this.logger.info("Taking screenshot")
+                await page.screenshot({ path: `${currentErrorDir}/error.png` })
+                this.logger.debug("Screenshot taken")
             }
 
             if (this.htmlContentOnError) {
                 const htmlContent = await page.content()
-                await fs.promises.writeFile(`error-${Date.now()}.html`, htmlContent)
+                await fs.promises.writeFile(`${currentErrorDir}/error.html`, htmlContent)
             }
 
             throw error
@@ -164,7 +200,7 @@ export class Instagram {
         return needsLogin
     }
 
-    async login(username: string, password: string) {
+    async logIn({ username, password }: LogInOptions) {
         this.logger.info("Logging in")
 
         await this.executeWithDiagnostics([
@@ -177,14 +213,34 @@ export class Instagram {
         this.logger.debug("Logged in")
     }
 
-    async ensureLoggedIn(username: string, password: string) {
+    async ensureLoggedIn({ username, password }: LogInOptions) {
         const needsLogin = await this.needsLogin()
 
         if (needsLogin) {
             this.logger.info("Needs login")
-            await this.login(username, password)
+            await this.logIn({ username, password })
         } else {
             this.logger.info("Already logged in")
         }
+    }
+
+    async createPost({ caption, filePaths }: CreatePostOptions) {
+        this.logger.info("Creating post")
+
+        const result: PostData = await this.executeWithDiagnostics([
+            delayAction(1500),
+            clickOnCreateButtonAction,
+            clickOnPostButtonAction,
+            selectFilesAction(filePaths),
+            clickOnNextButtonAction,
+            clickOnNextButtonAction,
+            putPostCaptionAction(caption),
+            clickOnShareButtonAction,
+            waitForConfirmationAction,
+        ])
+
+        this.logger.debug("Post created")
+
+        return result
     }
 }

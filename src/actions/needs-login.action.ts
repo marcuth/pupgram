@@ -5,7 +5,9 @@ export const needsLoginAction: Action<boolean> = async ({ config, logger, page }
 
     logger.debug("Checking if needs login")
 
-    const loginTextElement = await page.$(`xpath///span[contains(text(), '${config.loginText}')]`)
+    const loginTextElement = await page.$(
+        `xpath///*[contains(text(), "${config.loginText}") or contains(text(), "${config.loginTextAlternative}")]`,
+    )
 
     logger.debug("Login text element found: ", loginTextElement)
 

@@ -1,5 +1,2 @@
-function main() {
-    console.log("Hello from pupgram")
-}
-
-main()
+export * from "./configs"
+export * from "./instagram"
