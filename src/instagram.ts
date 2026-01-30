@@ -129,7 +129,7 @@ export class Instagram {
         const page = await this.browser.newPage()
 
         await page.setViewport({ width: 1920, height: 1080 })
-        await page.goto(this.baseUrl, { waitUntil: "networkidle2" })
+        await page.goto(this.baseUrl, { waitUntil: "domcontentloaded" })
 
         this.logger.debug("Page initalized")
 

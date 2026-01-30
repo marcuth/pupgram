@@ -15,6 +15,9 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "playground": "ts-node ./playground/index.ts"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "instagram",
     "puppeteer",
