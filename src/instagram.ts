@@ -2,7 +2,6 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
 import puppeteer from "puppeteer-extra"
 import { Browser } from "puppeteer"
 import { Logger } from "winston"
-
 import fs from "node:fs"
 
 import {
@@ -25,6 +24,7 @@ import { PostData } from "./interfaces/post-data.interface"
 import { createLogger } from "./helpers/logger.helper"
 import { delayAction } from "./actions/delay.action"
 import { Action, Config } from "./interfaces"
+import path from "node:path"
 
 puppeteer.use(StealthPlugin())
 
@@ -155,8 +155,8 @@ export class Instagram {
         } catch (error) {
             this.logger.error(error)
 
-            const errorsDir = "errors"
-            const currentErrorDir = `${errorsDir}/error-${Date.now()}`
+            const errorsDir = path.join(process.cwd(), "errors")
+            const currentErrorDir = path.join(errorsDir, `error-${Date.now()}`)
 
             if (this.screenshotOnError || this.htmlContentOnError) {
                 this.logger.info("Creating error directory")
