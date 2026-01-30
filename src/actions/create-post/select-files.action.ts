@@ -1,6 +1,7 @@
 import { ElementHandle } from "puppeteer"
 
 import { ActionFactory } from "../../interfaces"
+import { delay } from "../../utils/delay.util"
 import { InstagramError } from "../../error"
 
 export const selectFilesAction: ActionFactory = (filePaths: string[]) => {
@@ -15,14 +16,16 @@ export const selectFilesAction: ActionFactory = (filePaths: string[]) => {
             throw new InstagramError("File input element not found")
         }
 
-        logger.debug("File input element found. Making it visible")
+        await delay(500)
 
-        await page.evaluate((selector) => {
-            const fileInputElement = document.querySelector(selector) as HTMLInputElement
-            fileInputElement.style.display = "block"
-        }, config.fileInputSelector)
+        // logger.debug("File input element found. Making it visible")
 
-        logger.debug("File input element visible. Uploading files")
+        // await page.evaluate((selector) => {
+        //     const fileInputElement = document.querySelector(selector) as HTMLInputElement
+        //     fileInputElement.style.display = "block"
+        // }, config.fileInputSelector)
+
+        // logger.debug("File input element visible. Uploading files")
 
         await fileInputElement.uploadFile(...filePaths)
 
