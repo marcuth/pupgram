@@ -2,6 +2,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
 import puppeteer from "puppeteer-extra"
 import { Browser } from "puppeteer"
 import { Logger } from "winston"
+
 import path from "node:path"
 import fs from "node:fs"
 
