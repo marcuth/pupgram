@@ -7,7 +7,7 @@ export type ActionOptions = {
     config: Config
     logger: Logger
     page: Page
-    defaultTimeout?: number
+    defaultTimeout: number
 }
 
 export type Action<T = void> = (options: ActionOptions) => Promise<T>

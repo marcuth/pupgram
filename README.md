@@ -57,6 +57,42 @@ async function main() {
 main()
 ```
 
+### Creating a Reel
+
+```ts
+import { Instagram, enConfig } from "pupgram"
+
+async function main() {
+    // 1. Initialize the Instagram instance
+    const instagram = await Instagram.create({
+        puppeteer: {
+            userDataDir: ".user-data",
+            headless: "shell",
+        },
+        config: enConfig,
+    })
+
+    // 2. Ensure you are logged in
+    await instagram.ensureLoggedIn({
+        username: "your-username",
+        password: "your-password",
+    })
+
+    // 3. Create a Reel
+    const reelData = await instagram.createReel({
+        filePaths: ["./path/to/video.mp4"],
+        caption: "My awesome Reel! 🎥",
+    })
+
+    console.log(`Reel created! URL: https://www.instagram.com/reel/${reelData.code}`)
+
+    // 4. Close the instance
+    await instagram.close()
+}
+
+main()
+```
+
 ---
 
 ### Features
@@ -76,9 +112,24 @@ Automate content publishing with support for:
 - **Captions**: Add rich text captions to your posts.
 - **Confirmation**: Waiting for server confirmation to ensure the post is live before proceeding.
 
+#### 🎞️ Reel Creation
+
+Automate reel publishing with support for:
+- **Video Upload**: Upload video files.
+- **Aspect Ratio**: Automatically handles ratio selection for Reels (Original/9:16).
+- **Captions**: Add rich text captions.
+
 #### ⚙️ Configurable
 
 Pupgram is designed to be flexible. You can provide custom configurations for different locales or UI variations using the `config` option in `Instagram.create`.
+
+#### 🐞 Debugging
+
+When things go wrong, Pupgram helps you diagnose the issue. If `screenshotOnError` or `htmlContentOnError` are enabled (default: `true`), Pupgram creates an `errors` directory in your project root.
+
+Each error generates a timestamped folder containing:
+- **error.png**: A screenshot of the page at the time of the error.
+- **error.html**: The HTML content of the page.
 
 ---
 

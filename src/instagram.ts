@@ -2,7 +2,7 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth"
 import puppeteer from "puppeteer-extra"
 import { Browser } from "puppeteer"
 import { Logger } from "winston"
-
+import path from "node:path"
 import fs from "node:fs"
 
 import {
@@ -12,7 +12,7 @@ import {
     clickOnShareButtonAction,
     putPostCaptionAction,
     selectFilesAction,
-    waitForConfirmationAction,
+    waitForPostConfigureAction,
 } from "./actions/create-post"
 import {
     typeUsernameAction,
@@ -20,12 +20,12 @@ import {
     clickOnLoginButtonAction,
     tryCloseNotificationsDialogAction,
 } from "./actions/login"
+import { selectRatioAction, tryCloseReelInfoAction, waitForReelConfigureAction } from "./actions/create-reel"
 import { needsLoginAction } from "./actions/needs-login.action"
 import { PostData } from "./interfaces/post-data.interface"
 import { createLogger } from "./helpers/logger.helper"
 import { delayAction } from "./actions/delay.action"
 import { Action, Config } from "./interfaces"
-import path from "node:path"
 
 puppeteer.use(StealthPlugin())
 
@@ -129,7 +129,11 @@ export class Instagram {
 
         const page = await this.browser.newPage()
 
-        await page.setViewport({ width: 1920, height: 1080 })
+        await page.setViewport({
+            width: 1920,
+            height: 919,
+        })
+
         await page.goto(this.baseUrl, { waitUntil: "domcontentloaded" })
 
         this.logger.debug("Page initalized")
@@ -237,10 +241,32 @@ export class Instagram {
             clickOnNextButtonAction,
             putPostCaptionAction(caption),
             clickOnShareButtonAction,
-            waitForConfirmationAction,
+            waitForPostConfigureAction,
         ])
 
         this.logger.debug("Post created")
+
+        return result
+    }
+
+    async createReel({ caption, filePaths }: CreatePostOptions) {
+        this.logger.info("Creating reel")
+
+        const result: PostData = await this.executeWithDiagnostics([
+            delayAction(1500),
+            clickOnCreateButtonAction,
+            clickOnPostButtonAction,
+            selectFilesAction(filePaths),
+            tryCloseReelInfoAction,
+            selectRatioAction,
+            clickOnNextButtonAction,
+            clickOnNextButtonAction,
+            putPostCaptionAction(caption),
+            clickOnShareButtonAction,
+            waitForReelConfigureAction,
+        ])
+
+        this.logger.debug("Reel created")
 
         return result
     }

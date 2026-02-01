@@ -4,7 +4,7 @@ import { PostData } from "../../interfaces/post-data.interface"
 import { InstagramError } from "../../error"
 import { Action } from "../../interfaces"
 
-export const waitForConfirmationAction: Action<PostData> = async ({ page, config, logger, defaultTimeout }) => {
+export const waitForPostConfigureAction: Action<PostData> = async ({ page, config, logger, defaultTimeout }) => {
     logger.info("Waiting for confirmation")
 
     let result: PostData
@@ -18,7 +18,7 @@ export const waitForConfirmationAction: Action<PostData> = async ({ page, config
             configureEndpoints.some((endpoint) => res.url().includes(endpoint)) &&
             res.status() === 200 &&
             res.request().method() === "POST",
-        { timeout: 60000 * 2 },
+        { timeout: 60000 * 5 },
     )
 
     const json = await response.json()

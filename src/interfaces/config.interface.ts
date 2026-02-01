@@ -13,4 +13,7 @@ export interface Config {
     nextButtonText: string
     shareButtonText: string
     confirmationText: string
+    reelSelectRatioText: string
+    reelSelectOriginalRatioText: string
+    reelCloseInfoText: string
 }

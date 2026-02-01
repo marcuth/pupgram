@@ -15,4 +15,7 @@ export const ptBrConfig: Config = {
     nextButtonText: "Avançar",
     confirmationText: "Seu post foi compartilhado.",
     shareButtonText: "Compartilhar",
+    reelSelectRatioText: "Selecionar corte",
+    reelSelectOriginalRatioText: "Original",
+    reelCloseInfoText: "Ok",
 }

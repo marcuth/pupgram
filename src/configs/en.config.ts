@@ -15,4 +15,7 @@ export const enConfig: Config = {
     nextButtonText: "Next",
     confirmationText: "Your post has been shared.",
     shareButtonText: "Share",
+    reelSelectRatioText: "Select crop",
+    reelSelectOriginalRatioText: "Original",
+    reelCloseInfoText: "Ok",
 }
