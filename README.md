@@ -47,7 +47,7 @@ async function main() {
         caption: "Hello from Pupgram! 🚀",
     })
 
-    console.log(`Post created! URL: https://www.instagram.com/p/${postData.code}`)
+    console.log(`Post created! URL: ${postData.url}`)
     console.log(postData)
 
     // 4. Close the instance
@@ -80,11 +80,11 @@ async function main() {
 
     // 3. Create a Reel
     const reelData = await instagram.createReel({
-        filePaths: ["./path/to/video.mp4"],
+        filePath: "./path/to/video.mp4",
         caption: "My awesome Reel! 🎥",
     })
 
-    console.log(`Reel created! URL: https://www.instagram.com/reel/${reelData.code}`)
+    console.log(`Reel created! URL: ${reelData.url}`)
 
     // 4. Close the instance
     await instagram.close()
@@ -122,6 +122,20 @@ Automate reel publishing with support for:
 #### ⚙️ Configurable
 
 Pupgram is designed to be flexible. You can provide custom configurations for different locales or UI variations using the `config` option in `Instagram.create`.
+
+#### 🌍 Forcing Language
+
+You can force Instagram to load in a specific language using the `languageParam` option. This is useful to ensure the UI matches the selectors provided in your config.
+
+```ts
+import { Instagram, enConfig, Language } from "pupgram"
+
+const instagram = await Instagram.create({
+    // ... other options
+    config: enConfig,
+    languageParam: Language.EN_US // Forces ?hl=en-us
+})
+```
 
 #### 🐞 Debugging
 
