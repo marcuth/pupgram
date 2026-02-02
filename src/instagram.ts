@@ -1,5 +1,5 @@
 import StealthPlugin from "puppeteer-extra-plugin-stealth"
-import puppeteer from "puppeteer-extra"
+import { PuppeteerExtra } from "puppeteer-extra"
 import { Browser } from "puppeteer"
 import { Logger } from "winston"
 
@@ -22,13 +22,13 @@ import {
     tryCloseNotificationsDialogAction,
 } from "./actions/login"
 import { selectRatioAction, tryCloseReelInfoAction, waitForReelConfigureAction } from "./actions/create-reel"
+import { createPostUrl, createReelUrl, requireVanillaPuppeteer } from "./utils"
 import { needsLoginAction } from "./actions/needs-login.action"
 import { PostData } from "./interfaces/post-data.interface"
 import { createLogger } from "./helpers/logger.helper"
 import { delayAction } from "./actions/delay.action"
 import { Action, Config } from "./interfaces"
-
-puppeteer.use(StealthPlugin())
+import { Language } from "./enums"
 
 export const defaultTimeout = 10_000
 
@@ -44,6 +44,7 @@ export type CreateInstagramOptions = {
     htmlContentOnError?: boolean
     config: Config
     defaultTimeout?: number
+    languageParam?: Language
 }
 
 export type InstagramOptions = {
@@ -53,6 +54,7 @@ export type InstagramOptions = {
     htmlContentOnError: boolean
     config: Config
     defaultTimeout?: number
+    languageParam?: Language
 }
 
 export type LogInOptions = {
@@ -65,6 +67,15 @@ export type CreatePostOptions = {
     caption: string
 }
 
+export type CreateReelOptions = {
+    filePath: string
+    caption: string
+}
+
+export type CreatePostResult = PostData & {
+    url: string
+}
+
 export class Instagram {
     readonly baseUrl = "https://www.instagram.com"
     private readonly browser: Browser
@@ -74,6 +85,7 @@ export class Instagram {
     private readonly htmlContentOnError: boolean
     readonly config: Config
     readonly defaultTimeout: number
+    readonly languageParam?: Language
 
     constructor({
         browser,
@@ -82,6 +94,7 @@ export class Instagram {
         htmlContentOnError,
         config,
         defaultTimeout: optionsDefaultTimeout,
+        languageParam,
     }: InstagramOptions) {
         this.browser = browser
         this.logLevel = logLevel
@@ -90,9 +103,14 @@ export class Instagram {
         this.htmlContentOnError = htmlContentOnError
         this.config = config
         this.defaultTimeout = optionsDefaultTimeout ?? defaultTimeout
+        this.languageParam = languageParam
     }
 
     static async create(options: CreateInstagramOptions) {
+        const puppeteer = new PuppeteerExtra(...requireVanillaPuppeteer())
+
+        puppeteer.use(StealthPlugin())
+
         const browser = await puppeteer.launch({
             headless: options.puppeteer.headless as any,
             executablePath: options.puppeteer.executablePath,
@@ -116,6 +134,7 @@ export class Instagram {
             htmlContentOnError: options.htmlContentOnError ?? true,
             config: options.config,
             defaultTimeout: options.defaultTimeout,
+            languageParam: options.languageParam,
         })
     }
 
@@ -135,7 +154,9 @@ export class Instagram {
             height: 919,
         })
 
-        await page.goto(this.baseUrl, { waitUntil: "domcontentloaded" })
+        await page.goto(`${this.baseUrl}${this.languageParam ? `?hl=${this.languageParam}` : ""}`, {
+            waitUntil: "domcontentloaded",
+        })
 
         this.logger.debug("Page initalized")
 
@@ -230,7 +251,7 @@ export class Instagram {
         }
     }
 
-    async createPost({ caption, filePaths }: CreatePostOptions) {
+    async createPost({ caption, filePaths }: CreatePostOptions): Promise<CreatePostResult> {
         this.logger.info("Creating post")
 
         const result: PostData = await this.executeWithDiagnostics([
@@ -247,17 +268,20 @@ export class Instagram {
 
         this.logger.debug("Post created")
 
-        return result
+        return {
+            ...result,
+            url: createPostUrl(result.code),
+        }
     }
 
-    async createReel({ caption, filePaths }: CreatePostOptions) {
+    async createReel({ caption, filePath }: CreateReelOptions): Promise<CreatePostResult> {
         this.logger.info("Creating reel")
 
         const result: PostData = await this.executeWithDiagnostics([
             delayAction(1500),
             clickOnCreateButtonAction,
             clickOnPostButtonAction,
-            selectFilesAction(filePaths),
+            selectFilesAction([filePath]),
             tryCloseReelInfoAction,
             selectRatioAction,
             clickOnNextButtonAction,
@@ -269,6 +293,9 @@ export class Instagram {
 
         this.logger.debug("Reel created")
 
-        return result
+        return {
+            ...result,
+            url: createReelUrl(result.code),
+        }
     }
 }

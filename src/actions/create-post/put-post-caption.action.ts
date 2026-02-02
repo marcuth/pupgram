@@ -1,6 +1,6 @@
 import { ActionFactory } from "../../interfaces"
-import { delay } from "../../utils/delay.util"
 import { InstagramError } from "../../error"
+import { delay } from "../../utils"
 
 export const putPostCaptionAction: ActionFactory = (caption: string) => {
     return async ({ page, config, logger, defaultTimeout }) => {
