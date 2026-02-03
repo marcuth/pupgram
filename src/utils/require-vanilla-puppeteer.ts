@@ -1,11 +1,11 @@
 export function requireVanillaPuppeteer() {
     try {
         return [require("puppeteer"), undefined]
-    } catch (_) {}
+    } catch {}
 
     try {
         return [require("puppeteer-core"), undefined]
-    } catch (err) {
-        return [undefined, err]
+    } catch (error) {
+        return [undefined, error]
     }
 }

@@ -98,7 +98,7 @@ export class Instagram {
     }: InstagramOptions) {
         this.browser = browser
         this.logLevel = logLevel
-        this.logger = createLogger("Instagram", logLevel)
+        this.logger = createLogger(Instagram.name, logLevel)
         this.screenshotOnError = screenshotOnError
         this.htmlContentOnError = htmlContentOnError
         this.config = config
