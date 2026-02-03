@@ -1,6 +1,6 @@
 {
   "name": "pupgram",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "commonjs",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
