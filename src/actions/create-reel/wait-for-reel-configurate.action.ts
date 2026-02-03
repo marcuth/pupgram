@@ -15,7 +15,7 @@ export const waitForReelConfigureAction: Action<PostData> = async ({ page }) => 
 
         if (json.media) {
             return {
-                caption: json.caption.text ?? "",
+                caption: json.caption?.text ?? "",
                 id: json.media.id,
                 pk: json.media.pk,
                 code: json.media.code,
