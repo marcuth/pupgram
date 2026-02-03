@@ -4,7 +4,7 @@ export const tryCloseReelInfoAction: Action<void> = async ({ page, config, logge
     logger.info("Closing reel info")
 
     try {
-        const closeButton = await page.waitForSelector(`xpath///*[text()='${config.reelCloseInfoText}']`, {
+        const closeButton = await page.waitForSelector(`xpath///button[text()='${config.reelCloseInfoText}']`, {
             timeout: defaultTimeout * 2,
         })
 

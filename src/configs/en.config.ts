@@ -17,5 +17,5 @@ export const enConfig: Config = {
     shareButtonText: "Share",
     reelSelectRatioText: "Select crop",
     reelSelectOriginalRatioText: "Original",
-    reelCloseInfoText: "Ok",
+    reelCloseInfoText: "OK",
 }

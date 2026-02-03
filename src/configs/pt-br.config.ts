@@ -17,5 +17,5 @@ export const ptBrConfig: Config = {
     shareButtonText: "Compartilhar",
     reelSelectRatioText: "Selecionar corte",
     reelSelectOriginalRatioText: "Original",
-    reelCloseInfoText: "Ok",
+    reelCloseInfoText: "OK",
 }
