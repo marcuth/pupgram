@@ -5,11 +5,17 @@ on:
     branches: [master]
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
 
       - uses: actions/setup-node@v4
         with:
@@ -25,6 +31,18 @@ jobs:
 
       - name: Format
         run: npm run format
+
+      - name: Commit lint and format changes
+        # Forks and Dependabot get a read-only token, so they cannot push.
+        if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "style: lint:fix e format automáticos"
+            git push
+          fi
 
       - name: Test
         run: npm run test:coverage
