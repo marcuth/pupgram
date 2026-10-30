@@ -12,11 +12,13 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,tests}/**/*.ts\"",
     "playground": "ts-node ./playground/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "lint:fix": "eslint --fix \"{src,tests}/**/*.ts\"",
+    "ci": "npm run lint:fix && npm run format && npm run test:coverage"
   },
   "publishConfig": {
     "access": "public"
@@ -41,6 +43,7 @@
     "prettier-plugin-sort-imports": "^1.8.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.5"
   },
   "dependencies": {

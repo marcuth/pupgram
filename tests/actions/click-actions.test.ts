@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest"
 
 import { tryCloseNotificationsDialogAction } from "../../src/actions/login/try-close-notifications-dialog.action"
-import { clickOnShareButtonAction } from "../../src/actions/create-post/click-on-share-button.action"
 import { clickOnCreateButtonAction } from "../../src/actions/create-post/click-on-create-button.action"
-import { clickOnNextButtonAction } from "../../src/actions/create-post/click-on-next-button.action"
+import { clickOnShareButtonAction } from "../../src/actions/create-post/click-on-share-button.action"
 import { clickOnPostButtonAction } from "../../src/actions/create-post/click-on-post-button.action"
+import { clickOnNextButtonAction } from "../../src/actions/create-post/click-on-next-button.action"
 import { clickOnLoginButtonAction } from "../../src/actions/login/click-on-login-button.action"
 import { InstagramError } from "../../src/error"
 import { createActionOptions } from "../helpers"
