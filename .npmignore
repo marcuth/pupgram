@@ -3,4 +3,6 @@ tsconfig.json
 .env
 playground/
 .user-data/
-errors/
+errors/tests/
+vitest.config.mts
+coverage/

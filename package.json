@@ -13,7 +13,10 @@
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "playground": "ts-node ./playground/index.ts"
+    "playground": "ts-node ./playground/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "publishConfig": {
     "access": "public"
@@ -30,13 +33,15 @@
   "devDependencies": {
     "@marcuth/env": "^0.0.1",
     "@types/node": "^25.1.0",
+    "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.1",
     "prettier-plugin-sort-imports": "^1.8.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
   },
   "dependencies": {
     "puppeteer": "^24.36.1",
