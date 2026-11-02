@@ -34,7 +34,7 @@
   "license": "MIT",
   "devDependencies": {
     "@marcuth/env": "^0.0.1",
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
